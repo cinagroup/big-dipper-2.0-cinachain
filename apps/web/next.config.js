@@ -6,4 +6,12 @@ const getNextConfig = require('../../packages/shared-utils/configs/next');
 const nextConfig = getNextConfig(JSON.parse(readFileSync('./package.json', 'utf8')).name);
 nextConfig.i18n = i18n;
 
+// Cloudflare Pages 静态导出配置
+nextConfig.output = 'export';
+nextConfig.images = {
+  ...(nextConfig.images || {}),
+  unoptimized: true,
+};
+nextConfig.trailingSlash = true;
+
 module.exports = nextConfig;
