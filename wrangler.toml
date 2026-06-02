@@ -1,0 +1,12 @@
+# Next.js Cloudflare Pages 构建配置
+# 此文件供 Cloudflare Pages 自动读取
+
+[build]
+command = "yarn install && yarn build:cf"
+output_directory = "apps/web/out"
+
+[build.environment]
+NODE_VERSION = "18"
+YARN_VERSION = "4.1.1"
+PROJECT_NAME = "web"
+NEXT_TELEMETRY_DISABLED = "1"

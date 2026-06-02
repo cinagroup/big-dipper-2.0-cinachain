@@ -24,7 +24,8 @@
     "e2e": "playwright test",
     "e2e:install": "playwright install --with-deps",
     "graphql:codegen": "turbo run graphql:codegen --continue",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "build:cf": "dotenv -- turbo run build --filter=$(dotenv -- printenv PROJECT_NAME || echo web)... && echo '✅ Static output: apps/web/out'"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",

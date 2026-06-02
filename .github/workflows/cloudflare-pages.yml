@@ -1,0 +1,40 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install
+
+      - name: Build
+        run: yarn build:cf
+        env:
+          NEXT_PUBLIC_GRAPHQL_URL: ${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }}
+          NEXT_PUBLIC_GRAPHQL_WS: ${{ secrets.NEXT_PUBLIC_GRAPHQL_WS }}
+          NEXT_PUBLIC_NETWORK_NAME: ${{ vars.NEXT_PUBLIC_NETWORK_NAME }}
+          NEXT_PUBLIC_RPC_WEBSOCKET: ${{ secrets.NEXT_PUBLIC_RPC_WEBSOCKET }}
+          NEXT_PUBLIC_KEPLR_CHAIN_ID: ${{ vars.NEXT_PUBLIC_KEPLR_CHAIN_ID }}
+          NEXT_PUBLIC_KEPLR_LCD_URL: ${{ secrets.NEXT_PUBLIC_KEPLR_LCD_URL }}
+          NEXT_PUBLIC_CHAIN_TYPE: ${{ vars.NEXT_PUBLIC_CHAIN_TYPE }}
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/out --project-name=big-dipper-chinachain --branch=main
